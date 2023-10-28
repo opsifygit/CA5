@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: backend
+      target: builder
+    stop_signal: SIGINT
+    environment:
+      - FLASK_SERVER_PORT=9092
+    ports:
+      - 9092:9092
+    volumes:
+      - ./backend:/src
+    depends_on:
+      -  mongo  
+
+  mongo:
+    image: mongo
+    # added this extra volume to persist data
+    volumes:
+      - ./db:/data/db 
