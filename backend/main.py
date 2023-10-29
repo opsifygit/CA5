@@ -16,9 +16,9 @@ app = Flask(__name__)
 
 @app.route("/createTodo",methods=['POST'])
 def create_todo():
-    title = request.json["title"]
-    description = request.json["description"]
-    completed = request.json["completed"]
+    title = request.form.get("title")
+    description = request.form.get("description")
+    completed = request.form.get("completed")
 
     todoId = todo_collection.insert_one({
         "title":title,

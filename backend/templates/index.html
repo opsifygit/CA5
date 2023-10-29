@@ -1,28 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Backend</title>
-  </head>
-  <body>
-    <!-- form to create a new todo -->
-    <form action="/createTodo" method="post">
-      <input type="text" name="title" />
-      <input type="text" name="description" />
-      <input type="checkbox" name="done" />
-      <input type="submit" value="Create" />
-    </form>
-    <!-- show all todos -->
-    <ul>
-      {% for todo in todos %}
-        <li>
-          <a href="/todos/{{ todo.id }}">{{ todo.title }}</a>
-          <form action="/todos/{{ todo.id }}" method="post">
-            <input type="hidden" name="_method" value="delete" />
-            <input type="submit" value="Delete" />
-          </form>
-        </li>
-      {% endfor %}
-    </ul>
-  </body>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+</head>
+
+<body>
+    <div style="margin-top: 50px;" class="ui container">
+        <h1 class="ui center aligned header">To Do App</h1>
+
+        <form class="ui form" action="/add" method="post">
+            <div class="field">
+                <label>Todo Title</label>
+                <input type="text" name="title" placeholder="Enter Todo..."><br>
+            </div>
+            <div class="field">
+              <label>Todo Description</label>
+              <input type="text" name="description" placeholder="Enter Description..."><br>
+          </div>
+            <button class="ui blue button" type="submit">Add</button>
+        </form>
+
+        <hr>
+
+        {% for todo in todo_list %}
+        <div class="ui segment">
+            <p class="ui big header">{{todo.id }} | {{ todo.title }}</p>
+
+            {% if todo.complete == False %}
+            <span class="ui gray label">Not Complete</span>
+            {% else %}
+            <span class="ui green label">Completed</span>
+            {% endif %}
+
+            <button class="ui blue button" onclick="updateTodo">Update</a>
+            <button class="ui red button" onclick="deleteTodo">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+      // update a todo
+      function updateTodo(e) {
+        e.preventDefault();
+
+        var todoId = document.getElementById("todoId").value;
+        var todoTitle = document.getElementById("todoTitle").value;
+        var todoComplete = document.getElementById("todoComplete").value;
+
+        fetch("/updateTodo", {
+          method: "POST",
+          body: JSON.stringify({
+            title: todoTitle,
+            complete: todoComplete,
+          }),
+        })
+          .then((response) => response.json())
+          .then((jsonResponse) => {
+            console.log(jsonResponse);
+            window.location.href = "/";
+          });
+      }
+
+      // delete a todo
+      function deleteTodo() {
+        var todoId = document.getElementById("todoId").value;
+
+        fetch("/deleteTodo", {
+          method: "POST",
+          body: JSON.stringify({
+            todoId: todoId,
+          }),
+        })
+          .then((response) => response.json())
+          .then((jsonResponse) => {
+            console.log(jsonResponse);
+            window.location.href = "/";
+          });
+      }
+    </script>
+</body>
+
 </html>
