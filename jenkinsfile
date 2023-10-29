@@ -1,21 +1,23 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Build') {
+    environment {
+        DOCKERHUB_USERNAME = credentials('opsifygit')
+        DOCKERHUB_PASSWORD = credentials('dckr_pat_kaADEk2Remhzgx_8T3Gw5u4NaZo')
+        IMAGE_NAME = 'ca5'
+        IMAGE_TAG = 'latest'
+    }
+
+   stages {
+        stage('Build and Push') {
             steps {
-                echo 'Building..'
-                sh 'docker-compose build'
-            }
-        }
-        stage('Test') {
-            steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        sh "docker-compose build"
+                        sh "docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG"
+                        sh "docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$IMAGE_TAG"
+                    }
+                }
             }
         }
     }

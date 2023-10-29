@@ -6,11 +6,23 @@
   </head>
   <body>
     <!-- form to create a new todo -->
-    <form action="/todos" method="post">
+    <form action="/createTodo" method="post">
       <input type="text" name="title" />
       <input type="text" name="description" />
       <input type="checkbox" name="done" />
       <input type="submit" value="Create" />
     </form>
+    <!-- show all todos -->
+    <ul>
+      {% for todo in todos %}
+        <li>
+          <a href="/todos/{{ todo.id }}">{{ todo.title }}</a>
+          <form action="/todos/{{ todo.id }}" method="post">
+            <input type="hidden" name="_method" value="delete" />
+            <input type="submit" value="Delete" />
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
   </body>
 </html>

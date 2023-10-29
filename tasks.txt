@@ -1,0 +1,3 @@
+Adeel: Docker compose, jenkins file, and docker files for backend and  db
+Faziha: Backend
+Maryam: Frontend and db
