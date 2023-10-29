@@ -2,10 +2,7 @@ pipeline {
     agent any
 
     stages {
-        enviroment {
-            echo 'Setting up enviroment..'
-        }
-        stae('Checkout') {
+        stage('Checkout') {
             steps {
                 echo 'Checking out code..'
             }
